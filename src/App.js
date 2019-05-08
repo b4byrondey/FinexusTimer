@@ -6,9 +6,10 @@ export default function App(){
   const [isResend,setIsResend] = useState(false);
   const [isMainTimerUsed,setIsMainTimerUsed] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(300);
+  const [otpMessage, setOtpMessage] = useState("Your OTP is expiring in ")
 
   //Adjust the delay here
-  useInterval(counter, isMainTimerUsed ? null : 50);
+  useInterval(counter, isMainTimerUsed ? null : 1000);
 
   function counter(){
     setIsResend(false)
@@ -29,8 +30,13 @@ export default function App(){
         setIsResend(true)
     }
  
+
      if (min === 0 & sec === 0 ) {
        setIsMainTimerUsed(true)
+       setOtpMessage("Your OTP has expired")
+     }
+     else{
+      setOtpMessage("Your OTP is expiring in ")
      }
      setSecondsLeft(secondsLeft - 1);
 }
@@ -42,6 +48,7 @@ function restartCountDown() {
   setSecondsLeft("300");
   setIsResend(false);
 }
+
 
 //custom hook by https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 function useInterval(callback, delay) {
@@ -66,7 +73,7 @@ function useInterval(callback, delay) {
   
   return (
     <div style={{textAlign: 'center'}}>
-      <label>Your OTP is expiring in <span style={{fontWeight: 'bold'}}>{minutes}:{seconds}</span></label>
+      <label>{otpMessage}<span style={{fontWeight: 'bold'}} hidden = {isMainTimerUsed}>{minutes}:{seconds}</span></label>
     <br />
       <button disabled={!isResend} onClick={restartCountDown}>Resend OTP</button>
     </div>
